@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Compression</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: #111;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      width: 400px;
+      text-align: center;
+    }
+
+    .file-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .custom-file-upload,
+    .clear-btn {
+      padding: 10px 20px;
+      border: none;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .custom-file-upload {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .clear-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .drop-zone {
+      border: 2px dashed #00ffcc;
+      padding: 50px 20px;
+      margin-bottom: 20px;
+      color: #ccc;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .drop-zone.dragover {
+      background-color: rgba(0, 255, 204, 0.1);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    input[type="submit"] {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    .file-name {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 15px; /* Added spacing below the file name */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Image Compression</h1>
+
+  <form id="upload-form" action="/compress" method="post" enctype="multipart/form-data">
+    <div class="file-actions">
+      <label class="custom-file-upload" for="image">Choose</label>
+      <button type="button" class="clear-btn" onclick="clearFile()">Clear</button>
+    </div>
+
+    <input type="file" id="image" name="image" onchange="updateFileName()" required>
+
+    <div class="drop-zone" id="drop-zone">
+      Drag your files here
+    </div>
+
+    <div class="file-name" id="file-name">No file chosen</div>
+
+    <input type="submit" value="Compress Image">
+  </form>
+
+  <script>
+    const dropZone = document.getElementById("drop-zone");
+    const input = document.getElementById("image");
+    const fileNameDisplay = document.getElementById("file-name");
+
+    function updateFileName() {
+      fileNameDisplay.textContent = input.files.length > 0 ? input.files[0].name : "No file chosen";
+    }
+
+    function clearFile() {
+      input.value = "";
+      fileNameDisplay.textContent = "No file chosen";
+    }
+
+    // Drag and drop behavior
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        input.files = files;
+        updateFileName();
+      }
+    });
+  </script>
+</body>
+</html>
